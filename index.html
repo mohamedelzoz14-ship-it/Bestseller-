@@ -6,12 +6,85 @@
 <title>Adidas Egypt — Bestseller</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
-  :root {
-    --black: #000000; --white: #FFFFFF; --gold: #C8A84B;
-    --mid: #555555; --card-bg: #111;
-  }
+  :root { --black: #000; --white: #fff; --gold: #C8A84B; --mid: #555; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+  body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+
+  /* ===================== INTRO ===================== */
+  #intro {
+    position: fixed; inset: 0; background: #000; z-index: 999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px;
+  }
+
+  .intro-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 52px; letter-spacing: 8px;
+    text-transform: uppercase; color: var(--white);
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .intro-logo span { color: var(--gold); }
+
+  .intro-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 6px;
+    text-transform: uppercase; color: var(--mid);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1.2s;
+  }
+
+  .intro-line {
+    width: 0; height: 2px; background: var(--gold);
+    animation: expandLine 0.8s ease forwards 1.8s;
+  }
+
+  #intro.hide {
+    animation: fadeOut 0.6s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes expandLine {
+    to { width: 120px; }
+  }
+  @keyframes fadeOut {
+    to { opacity: 0; pointer-events: none; }
+  }
+
+  /* ===================== WELCOME ===================== */
+  #welcome-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 99;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px;
+  }
+  #welcome-overlay.show { display: flex; }
+
+  .welcome-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--mid);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .welcome-store {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 64px; font-weight: 900; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--white);
+    animation: fadeUp 0.5s ease forwards 0.2s;
+    opacity: 0;
+  }
+
+  .welcome-line {
+    width: 80px; height: 3px; background: var(--gold);
+    animation: expandLine 0.5s ease forwards 0.5s;
+  }
+
+  /* ===================== MAIN APP ===================== */
+  #app { opacity: 0; transition: opacity 0.5s; }
+  #app.show { opacity: 1; }
 
   header {
     background: var(--black); padding: 20px 24px 16px;
@@ -51,9 +124,21 @@
     background: #111; border: 1px solid #1e1e1e;
     display: flex; align-items: center; gap: 12px;
     padding: 12px; margin-bottom: 8px; transition: border-color 0.15s;
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
   }
-  .card:hover { border-color: #444; }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
 
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .card:hover { border-color: #444; }
   .rank { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; color: #222; min-width: 28px; text-align: center; line-height: 1; }
   .card:nth-child(1) .rank { color: var(--gold); }
   .card:nth-child(2) .rank { color: #aaa; }
@@ -66,32 +151,48 @@
   .info { flex: 1; min-width: 0; }
   .article-num { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: var(--white); text-transform: uppercase; }
   .ns { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 3px; }
-
   .empty { text-align: center; padding: 40px 20px; color: #333; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border: 1px dashed #222; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">adidas <span>//</span> bestseller</div>
-  <div class="week-badge">Egypt 2026</div>
-</header>
-
-<div class="selector-wrap">
-  <div class="selector-label">اختار الفرع</div>
-  <div class="store-pills" id="pills"></div>
+<!-- INTRO -->
+<div id="intro">
+  <div class="intro-logo">adidas <span>//</span></div>
+  <div class="intro-line"></div>
+  <div class="intro-sub">Bestseller Report — Egypt 2026</div>
 </div>
 
-<div class="main">
-  <div>
-    <div class="section-title"><span class="badge">🇪🇬 Egypt</span> Top 5</div>
-    <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
-    <div id="egyptList"></div>
+<!-- WELCOME OVERLAY -->
+<div id="welcome-overlay">
+  <div class="welcome-text">Welcome</div>
+  <div class="welcome-store" id="welcomeStore">EG222</div>
+  <div class="welcome-line"></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <header>
+    <div class="logo">adidas <span>//</span> bestseller</div>
+    <div class="week-badge">Egypt 2026</div>
+  </header>
+
+  <div class="selector-wrap">
+    <div class="selector-label">اختار الفرع</div>
+    <div class="store-pills" id="pills"></div>
   </div>
-  <div>
-    <div class="section-title"><span class="badge store-badge" id="storeLabel">Store</span> Top 5</div>
-    <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
-    <div id="storeList"></div>
+
+  <div class="main">
+    <div>
+      <div class="section-title"><span class="badge">🇪🇬 Egypt</span> Top 5</div>
+      <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
+      <div id="egyptList"></div>
+    </div>
+    <div>
+      <div class="section-title"><span class="badge store-badge" id="storeLabel">Store</span> Top 5</div>
+      <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
+      <div id="storeList"></div>
+    </div>
   </div>
 </div>
 
@@ -100,6 +201,13 @@
 // DATA — كل اسبوع بتغير الارقام هنا بس
 // ============================================================
 const DATA = [
+  // === EGYPT TOP 5 ===
+  { store: "EGYPT", article: "KA7242", ns: 8200 },
+  { store: "EGYPT", article: "JM5897", ns: 11403 },
+  { store: "EGYPT", article: "IE8135", ns: 9116 },
+  { store: "EGYPT", article: "KF1823", ns: 9648 },
+  { store: "EGYPT", article: "KE4698", ns: 9471 },
+  // === STORES ===
   { store: "EG107", article: "IH0304", ns: 4297 },
   { store: "EG107", article: "JV9888", ns: 3157 },
   { store: "EG107", article: "KA7242", ns: 4824 },
@@ -128,15 +236,11 @@ const DATA = [
 ];
 
 function getEgyptTop5() {
-  const map = {};
-  DATA.forEach(r => {
-    map[r.article] = (map[r.article] || 0) + r.ns;
-  });
-  return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,5).map(([article,ns]) => ({article,ns}));
+  return DATA.filter(r => r.store === "EGYPT").slice(0, 5);
 }
 
 function getStoreTop5(store) {
-  return DATA.filter(r => r.store === store).sort((a,b) => b.ns-a.ns).slice(0,5);
+  return DATA.filter(r => r.store === store).slice(0, 5);
 }
 
 function imgUrl(article) {
@@ -165,14 +269,39 @@ function render(store) {
   document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.store === store));
 }
 
-const stores = [...new Set(DATA.map(r => r.store))];
+function showWelcome(store) {
+  const overlay = document.getElementById('welcome-overlay');
+  document.getElementById('welcomeStore').textContent = store;
+  overlay.classList.add('show');
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    render(store);
+  }, 1800);
+}
+
+// INTRO
+setTimeout(() => {
+  document.getElementById('intro').classList.add('hide');
+  setTimeout(() => {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+  }, 600);
+}, 2800);
+
+// PILLS
+const stores = [...new Set(DATA.map(r => r.store))].filter(s => s !== "EGYPT");
 const pillsEl = document.getElementById('pills');
 stores.forEach(s => {
   const b = document.createElement('button');
   b.className = 'pill'; b.dataset.store = s; b.textContent = s;
-  b.onclick = () => render(s);
+  b.onclick = () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    b.classList.add('active');
+    showWelcome(s);
+  };
   pillsEl.appendChild(b);
 });
+
 render(stores[0]);
 </script>
 </body>
