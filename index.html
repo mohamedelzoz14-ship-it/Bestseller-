@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adidas Egypt — Bestseller</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap');
+  :root {
+    --black: #000000; --white: #FFFFFF; --gold: #C8A84B;
+    --mid: #555555; --card-bg: #111;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
+
+  header {
+    background: var(--black); padding: 20px 24px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid var(--white);
+  }
+  .logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 26px; letter-spacing: 4px; text-transform: uppercase; }
+  .logo span { color: var(--gold); }
+  .week-badge { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; color: var(--mid); text-transform: uppercase; }
+
+  .selector-wrap { background: #111; padding: 18px 20px; border-bottom: 1px solid #222; }
+  .selector-label { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 3px; color: var(--mid); text-transform: uppercase; margin-bottom: 10px; }
+  .store-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    padding: 8px 18px; border: 1.5px solid #333; background: transparent;
+    color: #888; font-family: 'Barlow Condensed', sans-serif; font-size: 14px;
+    font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: all 0.15s; text-transform: uppercase;
+  }
+  .pill:hover { border-color: var(--white); color: var(--white); }
+  .pill.active { background: var(--white); color: var(--black); border-color: var(--white); }
+
+  .main { padding: 20px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 580px) { .main { grid-template-columns: 1fr; } }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge { background: var(--gold); color: var(--black); padding: 2px 8px; font-size: 10px; letter-spacing: 1px; }
+  .badge.store-badge { background: var(--white); }
+
+  .stripes { display: flex; gap: 3px; margin-bottom: 8px; }
+  .stripe { height: 3px; flex: 1; background: var(--white); opacity: 0.12; }
+
+  .card {
+    background: #111; border: 1px solid #1e1e1e;
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; margin-bottom: 8px; transition: border-color 0.15s;
+  }
+  .card:hover { border-color: #444; }
+
+  .rank { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; color: #222; min-width: 28px; text-align: center; line-height: 1; }
+  .card:nth-child(1) .rank { color: var(--gold); }
+  .card:nth-child(2) .rank { color: #aaa; }
+  .card:nth-child(3) .rank { color: #7a5c3a; }
+
+  .img-wrap { width: 62px; height: 62px; background: #fff; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+  .img-placeholder { width: 100%; height: 100%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #999; text-align: center; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; padding: 4px; }
+
+  .info { flex: 1; min-width: 0; }
+  .article-num { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: var(--white); text-transform: uppercase; }
+  .ns { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 3px; }
+
+  .empty { text-align: center; padding: 40px 20px; color: #333; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border: 1px dashed #222; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">adidas <span>//</span> bestseller</div>
+  <div class="week-badge">Egypt 2025</div>
+</header>
+
+<div class="selector-wrap">
+  <div class="selector-label">اختار الفرع</div>
+  <div class="store-pills" id="pills"></div>
+</div>
+
+<div class="main">
+  <div>
+    <div class="section-title"><span class="badge">🇪🇬 Egypt</span> Top 5</div>
+    <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
+    <div id="egyptList"></div>
+  </div>
+  <div>
+    <div class="section-title"><span class="badge store-badge" id="storeLabel">Store</span> Top 5</div>
+    <div class="stripes"><div class="stripe"></div><div class="stripe"></div><div class="stripe"></div></div>
+    <div id="storeList"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA — كل اسبوع بتغير الارقام هنا بس
+// ============================================================
+const DATA = [
+  { store: "EG107", article: "IH0304", ns: 4297 },
+  { store: "EG107", article: "JV9888", ns: 3157 },
+  { store: "EG107", article: "KA7242", ns: 4824 },
+  { store: "EG107", article: "JQ1452", ns: 4341 },
+  { store: "EG107", article: "JL6937", ns: 5832 },
+  { store: "EG222", article: "JP4428", ns: 3499 },
+  { store: "EG222", article: "IR5223", ns: 2363 },
+  { store: "EG222", article: "IC9770", ns: 2363 },
+  { store: "EG222", article: "JI1408", ns: 6391 },
+  { store: "EG222", article: "HP5818", ns: 2814 },
+  { store: "EG215", article: "JR0890", ns: 4727 },
+  { store: "EG215", article: "JR3103", ns: 3008 },
+  { store: "EG215", article: "GZ2312", ns: 3157 },
+  { store: "EG215", article: "IX1095", ns: 3444 },
+  { store: "EG215", article: "KI1099", ns: 3376 },
+  { store: "EG127", article: "KE4698", ns: 9471 },
+  { store: "EG127", article: "KA7242", ns: 8200 },
+  { store: "EG127", article: "KF0577", ns: 7894 },
+  { store: "EG127", article: "KF1823", ns: 9648 },
+  { store: "EG127", article: "JM5897", ns: 11403 },
+  { store: "EG212", article: "GW1990", ns: 4507 },
+  { store: "EG212", article: "JH9363", ns: 6753 },
+  { store: "EG212", article: "IE8135", ns: 9116 },
+  { store: "EG212", article: "IR5208", ns: 4727 },
+  { store: "EG212", article: "H00354", ns: 6415 },
+];
+
+function getEgyptTop5() {
+  const map = {};
+  DATA.forEach(r => {
+    map[r.article] = (map[r.article] || 0) + r.ns;
+  });
+  return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,5).map(([article,ns]) => ({article,ns}));
+}
+
+function getStoreTop5(store) {
+  return DATA.filter(r => r.store === store).sort((a,b) => b.ns-a.ns).slice(0,5);
+}
+
+function imgUrl(article) {
+  return `https://assets.adidas.com/images/h_280,f_auto,q_auto,fl_lossy,c_fill,g_auto/${article}/${article}_01_standard.jpg`;
+}
+
+function renderCard(item, idx) {
+  const ns = Number(item.ns).toLocaleString('en-EG');
+  return `<div class="card">
+    <div class="rank">${idx+1}</div>
+    <div class="img-wrap">
+      <img src="${imgUrl(item.article)}" alt="${item.article}"
+        onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>${item.article}</div>'" />
+    </div>
+    <div class="info">
+      <div class="article-num">${item.article}</div>
+      <div class="ns">EGP ${ns}</div>
+    </div>
+  </div>`;
+}
+
+function render(store) {
+  document.getElementById('egyptList').innerHTML = getEgyptTop5().map((r,i) => renderCard(r,i)).join('') || '<div class="empty">No Data</div>';
+  document.getElementById('storeLabel').textContent = store;
+  document.getElementById('storeList').innerHTML = getStoreTop5(store).map((r,i) => renderCard(r,i)).join('') || '<div class="empty">No Data</div>';
+  document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.store === store));
+}
+
+const stores = [...new Set(DATA.map(r => r.store))];
+const pillsEl = document.getElementById('pills');
+stores.forEach(s => {
+  const b = document.createElement('button');
+  b.className = 'pill'; b.dataset.store = s; b.textContent = s;
+  b.onclick = () => render(s);
+  pillsEl.appendChild(b);
+});
+render(stores[0]);
+</script>
+</body>
+</html>
