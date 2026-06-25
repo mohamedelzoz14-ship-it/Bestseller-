@@ -152,6 +152,11 @@
   .article-num { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; color: var(--white); text-transform: uppercase; }
   .ns { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 600; color: var(--gold); margin-top: 3px; }
   .empty { text-align: center; padding: 40px 20px; color: #333; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border: 1px dashed #222; }
+
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .badge-star { background: var(--gold); color: var(--black); font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 6px; text-transform: uppercase; }
+  .badge-egypt { background: #1a3a1a; color: #5a5; font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 6px; text-transform: uppercase; }
+  .card-star { border-color: var(--gold) !important; }
 </style>
 </head>
 <body>
@@ -277,26 +282,46 @@ function imgUrl(article) {
   return IMAGES[article] || null;
 }
 
-function renderCard(item, idx) {
+function getEgyptArticles() {
+  return DATA.filter(r => r.store === "EGYPT").map(r => r.article);
+}
+
+function getTopNSArticle(store) {
+  const items = DATA.filter(r => r.store === store);
+  if (!items.length) return null;
+  return items.reduce((a, b) => b.ns > a.ns ? b : a).article;
+}
+
+function renderCard(item, idx, store) {
   const ns = Number(item.ns).toLocaleString('en-EG');
   const img = imgUrl(item.article);
   const imgHtml = img
     ? `<img src="${img}" alt="${item.article}" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>${item.article}</div>'" />`
     : `<div class="img-placeholder">${item.article}</div>`;
-  return `<div class="card">
+  
+  const isTopNS = store && getTopNSArticle(store) === item.article;
+  const isInEgypt = store && getEgyptArticles().includes(item.article);
+
+  const badges = `
+    ${isTopNS ? '<span class="badge-star">⭐ Top NS</span>' : ''}
+    ${isInEgypt ? '<span class="badge-egypt">🇪🇬 Egypt Top 5</span>' : ''}
+  `;
+
+  return `<div class="card ${isTopNS ? 'card-star' : ''}">
     <div class="rank">${idx+1}</div>
     <div class="img-wrap">${imgHtml}</div>
     <div class="info">
       <div class="article-num">${item.article}</div>
       <div class="ns">EGP ${ns}</div>
+      <div class="badges">${badges}</div>
     </div>
   </div>`;
 }
 
 function render(store) {
-  document.getElementById('egyptList').innerHTML = getEgyptTop5().map((r,i) => renderCard(r,i)).join('') || '<div class="empty">No Data</div>';
+  document.getElementById('egyptList').innerHTML = getEgyptTop5().map((r,i) => renderCard(r,i, null)).join('') || '<div class="empty">No Data</div>';
   document.getElementById('storeLabel').textContent = store;
-  document.getElementById('storeList').innerHTML = getStoreTop5(store).map((r,i) => renderCard(r,i)).join('') || '<div class="empty">No Data</div>';
+  document.getElementById('storeList').innerHTML = getStoreTop5(store).map((r,i) => renderCard(r,i, store)).join('') || '<div class="empty">No Data</div>';
   document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.store === store));
 }
 
