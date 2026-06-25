@@ -198,6 +198,36 @@
 
 <script>
 // ============================================================
+// IMAGES — كل اسبوع بتضيف لينكات الصور هنا
+// ============================================================
+const IMAGES = {
+  "KA7242": "https://assets.adidas.com/images/w_450,f_auto,q_auto/f15ea15dca014ce0a4ab4ab10dd29afa_9366/KA7242_000_plp_model.jpg",
+  "JM5897": "https://assets.adidas.com/images/w_450,f_auto,q_auto/44ad9429d16a46ffb404df292923d173_9366/JM5897_HM53.jpg",
+  "IE8135": "https://assets.adidas.com/images/w_450,f_auto,q_auto/4ee1c39f2a164775aefae3de121bfc20_9366/IE8135_02_standard_hover.jpg",
+  "KF1823": "https://assets.adidas.com/images/w_450,f_auto,q_auto/703d8940222241a98bf962f50ee4588c_9366/KF1823_HM1.jpg",
+  "KE4698": "https://assets.adidas.com/images/w_450,f_auto,q_auto/a5746d271a32422e8971359c05e74280_9366/KE4698_000_plp_model.jpg",
+  "IH0304": "https://assets.adidas.com/images/w_450,f_auto,q_auto/064e15092cd046ba919d4a2493e3d66f_9366/IH0304_00_plp_standard.jpg",
+  "JV9888": "https://assets.adidas.com/images/w_450,f_auto,q_auto/87044c963c3946f9be6ec32217ca663f_9366/JV9888_000_plp_model.jpg",
+  "JQ1452": "https://assets.adidas.com/images/w_600,f_auto,q_auto/41bda3b07b084d098ac5020de5573f7e_9366/Dropset_Base_Training_Shoes_White_JQ1452_HM1.jpg",
+  "JL6937": "https://assets.adidas.com/images/w_450,f_auto,q_auto/a470ba4060364cb19104c2870b69de5b_9366/JL6937_000_plp_model.jpg",
+  "JP4428": "https://assets.adidas.com/images/w_450,f_auto,q_auto/6c5c485eaba24b69b02aa5b26f0c7ae5_9366/JP4428_000_plp_model.jpg",
+  "IR5223": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTR5e7K8k4AdpmBLz5ZAWJgrOE6Lj2kOxmS6BRAH2Q0yQ&s=10",
+  "IC9770": "https://assets.adidas.com/images/w_450,f_auto,q_auto/13d98786b1d346ce91baaf0900ec6f88_9366/IC9770_01_laydown.jpg",
+  "JI1408": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-wlVbHhimh3WLuUSzec9Xt9p3NFOu0DzV20-FKd_PZw&s=10",
+  "HP5818": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFQstouMNpgfDnt-R-Zj9k79Y7VuNE_HGZll8RwhdNvw&s=10",
+  "JR0890": "https://assets.adidas.com/images/w_450,f_auto,q_auto/4e0782815191460a9137520743772887_9366/JR0890_00_plp_standard.jpg",
+  "JR3103": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcLHSjCBe_ikHAm5rM0LkI-2p7dbjzVcyfWoIxAQdnvg&s=10",
+  "GZ2312": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpNfBS-y4w1liuCE3cHpSIpQHF_reIw2fUit6e_QrGCg&s",
+  "IX1095": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6UMLHeMPA8gUt1FXLx1CHd9tBRjgeR5ZmDEsw3fUZ_A&s=10",
+  "KI1099": "https://s13emagst.akamaized.net/products/116246/116245296/images/res_0ffed29f14d63a30eba2f26523d6fef4.jpg?width=720&height=720&hash=10EAC30D977BFE08C73069A1A4D17A38",
+  "KF0577": "https://assets.adidas.com/images/w_450,f_auto,q_auto/b73844a222ac4aed9749a764c251bf09_9366/KF0577_HM1.jpg",
+  "GW1990": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEkHn68c9n_5UfpmpHpUQfnuMAlKiVEgfci_vQ4TVKcw&s=10",
+  "JH9363": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTak0vsLH6qgCyrdaBV1brxXwgSJHTa_zU-4dzoi0tp_Q&s=10",
+  "IR5208": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyCIw4tC4e7FGlDJP0D3M5ODE6yTxeXuS-WVKmFK4Ytg&s=10",
+  "H00354": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkMUzTUMolCJh5FqaV3zPTea5cSAGS9JObCl5jb9e9bQ&s=10",
+};
+
+// ============================================================
 // DATA — كل اسبوع بتغير الارقام هنا بس
 // ============================================================
 const DATA = [
@@ -244,17 +274,18 @@ function getStoreTop5(store) {
 }
 
 function imgUrl(article) {
-  return `https://assets.adidas.com/images/h_280,f_auto,q_auto,fl_lossy,c_fill,g_auto/${article}/${article}_01_standard.jpg`;
+  return IMAGES[article] || null;
 }
 
 function renderCard(item, idx) {
   const ns = Number(item.ns).toLocaleString('en-EG');
+  const img = imgUrl(item.article);
+  const imgHtml = img
+    ? `<img src="${img}" alt="${item.article}" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>${item.article}</div>'" />`
+    : `<div class="img-placeholder">${item.article}</div>`;
   return `<div class="card">
     <div class="rank">${idx+1}</div>
-    <div class="img-wrap">
-      <img src="${imgUrl(item.article)}" alt="${item.article}"
-        onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>${item.article}</div>'" />
-    </div>
+    <div class="img-wrap">${imgHtml}</div>
     <div class="info">
       <div class="article-num">${item.article}</div>
       <div class="ns">EGP ${ns}</div>
